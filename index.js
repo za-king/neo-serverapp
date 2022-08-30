@@ -4,10 +4,10 @@ const db = require("./models");
 const cors = require("cors");
 const bodyparser = require("body-parser");
 const path = require('path');
-const dotenv = require('dotenv')
+
 app.use(express.json());
 app.use(cors());
-app.use(dotenv())
+require('dotenv').config();
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -39,8 +39,9 @@ app.use("/buktikonsul", buktikonsulRouter);
 const lockregisRouter = require("./routers/LockRegis");
 app.use("/lockregis", lockregisRouter);
 
+const PORT = process.env.PORT || 3000;
 db.sequelize.sync().then(() => {
-  app.listen(3004, (req, res) => {
-    console.log("server running");
-  });
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+});
 });
