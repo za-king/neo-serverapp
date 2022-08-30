@@ -4,9 +4,10 @@ const db = require("./models");
 const cors = require("cors");
 const bodyparser = require("body-parser");
 const path = require('path');
-require('dotenv').config();
+const dotenv = require('dotenv')
 app.use(express.json());
 app.use(cors());
+app.use(dotenv())
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -39,7 +40,7 @@ const lockregisRouter = require("./routers/LockRegis");
 app.use("/lockregis", lockregisRouter);
 
 db.sequelize.sync().then(() => {
-  app.listen(process.env.PORT || 3000, function(){
-    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  app.listen(3004, (req, res) => {
+    console.log("server running");
   });
 });
