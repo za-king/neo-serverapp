@@ -39,7 +39,7 @@ const lockregisRouter = require("./routers/LockRegis");
 app.use("/lockregis", lockregisRouter);
 
 db.sequelize.sync().then(() => {
-  app.listen(process.env.PORT || 3004, (req, res) => {
-    console.log("server running");
+  app.listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
   });
 });
