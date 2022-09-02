@@ -5,27 +5,39 @@ const { LockRegis } = require("../models");
 
 
 router.get("/", async (req, res) => {
+  try {
     const listOfLock = await LockRegis.findAll();
     res.json(listOfLock);
+  } catch (error) {
+    
+  }
+    
   });
 
 router.post("/", async (req, res) => {
   const data = {
     ...req.body,
   };
-  await LockRegis.create(data);
+
+  try {
+    await LockRegis.create(data);
   res.json(data);
+  } catch (error) {
+    
+  }
+  
 });
 
 router.put("/:id", async (req, res) => {
-  const lock = await LockRegis.findOne({
-    where: {
-      id: req.params.id,
-    },
-  });
-  if (!lock) return res.status(404).json({ msg: "not found data" });
+
 
   try {
+    const lock = await LockRegis.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!lock) return res.status(404).json({ msg: "not found data" });
     const data = {
         ...req.body,
     

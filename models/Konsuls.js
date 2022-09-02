@@ -30,10 +30,12 @@ module.exports = (sequelize, DataTypes) => {
         }
       
     })
+
+
     Konsuls.associate = (models) => {
         Konsuls.belongsTo(models.Users, {
           foreignKey: {
-            allowNull: true,
+            allowNull: false,
           },
         });
     }

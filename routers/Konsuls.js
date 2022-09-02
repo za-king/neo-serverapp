@@ -7,27 +7,43 @@ const validateTokenUser =require('../middleware/authUser')
 
 //getall
 router.get("/",async(req,res)=>{
-    const listOfKonsultasi =await Konsuls.findAll({include : [db.Users]})
-    res.json(listOfKonsultasi)
+    try {
+        const listOfKonsultasi =await Konsuls.findAll({include : [db.Users]})
+        res.json(listOfKonsultasi)
+    } catch (error) {
+        console.log(error);
+    }
+   
 })
 
 //getById
 router.get("/byId/:id", async (req, res) =>{
-    const id = req.params.id
-    const konsultasi = await Konsuls.findByPk(id,{include : [db.Users]});
-    res.json(konsultasi)
+    try {
+        const id = req.params.id
+        const konsultasi = await Konsuls.findByPk(id,{include : [db.Users]});
+        res.json(konsultasi)  
+    } catch (error) {
+        console.log(error); 
+    }
+    
 })
 
 
 //post
 
-router.post("/",validateTokenUser,  async (req, res) =>{
+router.post("/", async (req, res) =>{
     const data = {
        ...req.body
     }
-    
+
+    try {
+       
     await Konsuls.create(data)
-    res.json(data)
+    res.json(data) 
+    } catch (error) {
+        console.log(error);
+    }
+    
 })
 
 //delete

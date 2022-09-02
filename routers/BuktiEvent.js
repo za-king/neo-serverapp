@@ -14,24 +14,44 @@ router.post("/", upload, async (req, res) => {
     image: req.file.filename,
   };
 
-  await BuktiEvent.create(data);
-  res.json(data);
+  try {
+    await BuktiEvent.create(data);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+  }
+
+ 
 });
 
 router.get("/", async (req, res) => {
-  const listOfBuktiEvent = await BuktiEvent.findAll();
+
+  try {
+    const listOfBuktiEvent = await BuktiEvent.findAll();
   res.json(listOfBuktiEvent);
+  } catch (error) {
+    console.log(error);
+  }
+  
 });
 
 router.get("/byId/:id", async (req, res) => {
-  const id = req.params.id;
+
+  try {
+    const id = req.params.id;
   const data = await BuktiEvent.findByPk(id);
   res.json(data);
+  } catch (error) {
+    console.log(error);
+  }
+  
 });
 
 
 //deleteByID
 router.delete("/:id", async (req, res) => {
+  
+  try {
   const buktievent = await BuktiEvent.findOne({
     where: {
       id: req.params.id,
@@ -39,7 +59,7 @@ router.delete("/:id", async (req, res) => {
   });
 
   if(!buktievent) return res.status(404).json({msg: "not found data"})
-  try {
+  
     const filepath = `./buktievent/${buktievent.image}`;
     fs.unlinkSync(filepath)
     await BuktiEvent.destroy({

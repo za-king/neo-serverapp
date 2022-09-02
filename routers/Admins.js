@@ -9,8 +9,13 @@ const validateToken =require('../middleware/authAdmin')
 
 //get All
 router.get("/",validateToken,async(req,res)=>{
-  const listOfAdmin =await Admins.findAll()
+  try {
+    const listOfAdmin =await Admins.findAll()
   res.json(listOfAdmin)
+  } catch (err) {
+    console.log(err);
+  }
+  
 })
 
 
@@ -63,7 +68,9 @@ router.delete("/:id", async(req,res) =>{
 
 //Create
 router.post("/", async (req, res) => {
-  const { username, password, role } = req.body;
+
+  try {
+    const { username, password, role } = req.body;
   bycript.hash(password, 10).then((hash) => {
     Admins.create({
       username: username,
@@ -73,6 +80,10 @@ router.post("/", async (req, res) => {
 
     res.json("success");
   });
+  } catch (error) {
+    
+  }
+  
 });
 
 
@@ -81,7 +92,8 @@ router.post("/", async (req, res) => {
 router.post("/login",async (req, res) => {
   const { username, password,role } = req.body;
 
-  const admin = await Admins.findOne({ where: { username: username } });
+  try {
+    const admin = await Admins.findOne({ where: { username: username } });
 
   if (!admin) {
     res.json({ error: "User Does'nt Exist" });
@@ -98,6 +110,11 @@ router.post("/login",async (req, res) => {
       }
     });
   }
+  } catch (err) {
+    console.log(err);
+  }
+
+  
 });
 
 module.exports = router;

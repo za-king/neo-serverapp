@@ -5,8 +5,13 @@ const bycript = require("bcryptjs");
 const jwt = require('jsonwebtoken')
 
 router.get("/",async(req,res)=>{
-  const listOfUsers =await Users.findAll()
+  try {
+    const listOfUsers =await Users.findAll()
   res.json(listOfUsers)
+  } catch (error) {
+    console.log(error);
+  }
+  
 })
 
 router.get("/:id",async(req, res) =>{
@@ -25,15 +30,20 @@ router.get("/:id",async(req, res) =>{
 
 
 router.post("/", async (req, res) => {
-  const { username, password } = req.body;
-  bycript.hash(password, 10).then((hash) => {
-    Users.create({
-      username: username,
-      password: hash,
+  try {
+    const { username, password } = req.body;
+    bycript.hash(password, 10).then((hash) => {
+      Users.create({
+        username: username,
+        password: hash,
+      });
+  
+      res.json("success");
     });
-
-    res.json("success");
-  });
+  } catch (error) {
+    console.log(error);
+  }
+ 
 });
 
 //delete
@@ -53,23 +63,29 @@ router.delete("/:id", async(req,res) =>{
 })
 
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
 
-  const user = await Users.findOne({ where: { username: username } });
+  try {
+    const { username, password } = req.body;
 
-  if (!user) {
-    res.json({ error: "User Does'nt Exist" });
-  } else {
-    bycript.compare(password, user.password).then((match) => {
-      if (!match) {
-        res.json({ error: "wrong pass  and username" });
-      } else {
-        const accesToken = jwt.sign({username : user.username, id: user.id}, "scretKeyUser")
-        res.cookie('token2',accesToken, { httpOnly: true });
-        res.json({accesToken : accesToken, id: user.id} );
-      }
-    });
+    const user = await Users.findOne({ where: { username: username } });
+  
+    if (!user) {
+      res.json({ error: "User Does'nt Exist" });
+    } else {
+      bycript.compare(password, user.password).then((match) => {
+        if (!match) {
+          res.json({ error: "wrong pass  and username" });
+        } else {
+          const accesToken = jwt.sign({username : user.username, id: user.id}, "scretKeyUser")
+          res.cookie('token2',accesToken, { httpOnly: true });
+          res.json({accesToken : accesToken, id: user.id} );
+        }
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
+ 
 });
 
 module.exports = router;
